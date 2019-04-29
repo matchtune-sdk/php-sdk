@@ -1,0 +1,14 @@
+{
+    "name": "muzeek-sdk/php-sdk",
+    "type": "library",
+    "description": "A framework library to access Muzeek API",
+    "keywords": ["music", "muzeek", "sdk"],
+    "homepage": "https://www.muzeek.co",
+    "license": "Muzeek",
+    "authors": [
+        {
+            "name": "Igal Cohen-Hadria",
+            "email": "igal@muzeek.co",
+        }
+    ],
+}
