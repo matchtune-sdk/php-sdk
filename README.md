@@ -17,6 +17,8 @@ Simple Muzeek Query Example
 ```php
 require_once __DIR__ . '/vendor/autoload.php'; // change path as needed
 
+use Muzeek\Muzeek;
+
 $api = new Muzeek(["app_token" => $app_token]);
 
 $haserror = true;
