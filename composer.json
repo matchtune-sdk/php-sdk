@@ -4,7 +4,7 @@
     "description": "A framework library to access Muzeek API",
     "keywords": ["music", "muzeek", "sdk"],
     "homepage": "https://www.muzeek.co/",
-    "license": "Muzeek",
+    "license": "proprietary",
     "authors": [
         {
             "name": "Igal Cohen-Hadria",
