@@ -5,7 +5,6 @@
     "keywords": ["music", "muzeek", "sdk"],
     "homepage": "https://www.muzeek.co/",
     "license": "proprietary",
-    "minimum-stability" : "stable",
     "authors": [
         {
             "name": "Igal Cohen-Hadria",
