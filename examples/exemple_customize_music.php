@@ -22,19 +22,23 @@
 ** DEALINGS IN THE SOFTWARE.
 */
 
-require 'credentials.php';
-require 'helpers.php';
-require 'muzeek.php';
+require_once __DIR__ . '/credentials.php';
+require_once __DIR__ . '/helpers.php';
+require_once __DIR__ . '/../vendor/autoload.php';
+
+use Muzeek\Muzeek;
 
 $client_id = MUZEEK_CLIENT_ID;
 $app_token = retreivetoken($client_id);
-$api = new Muzeek(["app_token" => $app_token]);
+$api = new Muzeek([ "app_token"   => $app_token,
+                    "app_id"      => MUZEEK_APP_ID,
+                    "app_secret"  => MUZEEK_APP_SECRET]);
 $version = $api->apiVersion();
 echo "API Version : $version\n";
 
 $haserror = true;
 // -- login if needed
-if ($app_token != null || $result = $api->apiLogin($client_id, MUZEEK_APP_ID, MUZEEK_APP_SECRET, MUZEEK_TOS)) {
+if ($app_token != null || $result = $api->apiLogin($client_id, MUZEEK_TOS)) {
 
   // -- save the token
   savetoken($client_id, $api->getCurrentToken());

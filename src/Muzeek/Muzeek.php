@@ -21,6 +21,7 @@
 ** FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 ** DEALINGS IN THE SOFTWARE.
 */
+namespace Muzeek;
 
 /**
 * Class Muzeek
@@ -69,6 +70,8 @@ class Muzeek
   * Instantiates a new Muzeek super-class object.
   *
   * @param array $config
+  *   You should set app_id / app_secret / app_token in the contructor or in the environment
+  *   using respectively APP_ID_ENV_NAME / APP_SECRET_ENV_NAME / APP_TOKEN_ENV_NAME
   *
   * @throws MuzeekSDKException
   */
@@ -87,7 +90,17 @@ class Muzeek
   /**
   * Calls the api
   *
-  * @return result
+  * @param string $target
+  *   The url target
+  *
+  * @param string $method
+  *   HTTP Method : GET/POST/PUT/DELETE ...
+  *
+  * @param array $data
+  *   (optional) Argument to send to the endpoint
+  *
+  * @return array $result
+  *   returns server result or null if failed
   */
   protected function callAPI($target, $method, $data = false)
   {
@@ -121,7 +134,7 @@ class Muzeek
     if ($this->config["app_token"] != null) {
       $headers[]        = 'Authorization: Bearer ' . $this->config["app_token"]["value"];
     }
-    
+
     curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
     curl_setopt($curl, CURLOPT_URL, $url);
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
@@ -149,7 +162,8 @@ class Muzeek
   /**
   * Returns current JWT token for reuse
   *
-  * @return JWT Token
+  * @return array $token
+  *   returns JWT Token
   */
   public function getCurrentToken()
   {
@@ -157,9 +171,10 @@ class Muzeek
   }
 
   /**
-  * Returns last error
+  * Returns last server error
   *
-  * @return error
+  * @return string $error
+  *   Returns last server error
   */
   public function getLastError()
   {
@@ -169,7 +184,8 @@ class Muzeek
   /**
   * Retreive api version
   *
-  * @return true if successfull
+  * @return string $version
+  *   Returns API Version
   */
   public function apiVersion()
   {
@@ -180,10 +196,19 @@ class Muzeek
   /**
   * Login to API using apikey
   *
-  * @return true if successfull
+  * @param string $client_id
+  *   Identification for the client ex device UUID, account identification, email etc ...
+  *
+  * @param boolean $tos
+  *   Acceptation of the terms of services as listed https://www.getmuzeek.com/terms-of-service
+  *
+  * @return boolean
+  *   True if successfull, False otherwise
   */
-  public function apiLogin($client_id, $app_id, $app_secret, $tos)
+  public function apiLogin($client_id, $tos)
   {
+    $app_id                   = $this->config["app_id"];
+    $app_secret               = $this->config["app_secret"];
     $unixtime                 = time();
     $payload                  = $unixtime.$client_id.$app_id;
     $signature                = base64_encode(hash_hmac('sha256', $payload, $app_secret, TRUE));
@@ -208,7 +233,14 @@ class Muzeek
   /**
   * Login to API using login and password
   *
-  * @return true if successfull
+  * @param string $email
+  *   If no API key is available, API can be use with standard email/password method
+  *
+  * @param string $password
+  *   Password of the user
+  *
+  * @return boolean
+  * True if successfull, False otherwise
   */
   public function standardLogin($email, $password)
   {
@@ -225,7 +257,10 @@ class Muzeek
   /**
   * Filter all available genre and subgenre
   *
-  * @return dictionnary of genres & subgenres
+  * @param array $genre
+  *   Result from api call GET /genres
+  *
+  * @return array of genres & subgenres
   */
   private function _genres2dictionnary($genres)
   {
@@ -264,7 +299,19 @@ class Muzeek
   /**
   * Assemble a search query
   *
-  * @return formated dictionnary
+  * @param string $genre
+  *   Genre from the list of genre (possible to send an array of genre)
+  *
+  * @param string $subgenre
+  *   Subgenre from the list of subgenre (possible to send an array of subgenre)
+  *
+  * @param string $title
+  *   Title of a known matrix (possible to send an array of title)
+  *
+  * @param array $tags
+  *   Query to search using meaningfull tag words
+  *
+  * @return array formated dictionnary
   */
   public function makeQuery($genre = null, $subgenre = null, $title = null, $tags = null)
   {
@@ -287,7 +334,17 @@ class Muzeek
   /**
   * Assemble a feature query
   *
-  * @return formated dictionnary
+  * @param int $timecode
+  *   Set a climax at this time code in milliseconds
+  *
+  * @param boolean $withRiser
+  *   Enhence the climax using a riser sound effect before the climax
+  *
+  * @param boolean $withDrop
+  *   Enhence the climax using a drop sound effect after the climax
+  *
+  *
+  * @return array formated dictionnary
   */
   public function makeClimaxFeature($timecode, $withRiser = true, $withDrop = true)
   {
@@ -310,7 +367,10 @@ class Muzeek
   /**
   * Filter ai-generated musics
   *
-  * @return filtered output
+  * @param array $card
+  *   id card as received from generation
+  *
+  * @return array filtered output
   */
   private function _filterIDCard($card) {
     $output = [];
@@ -327,7 +387,10 @@ class Muzeek
   /**
   * Retreive ai-generated musics
   *
-  * @return idcard
+  * @param array $query
+  *   Use the result from makeQuery()
+  *
+  * @return array idcard
   */
   public function generate($query = [])
   {
@@ -343,7 +406,14 @@ class Muzeek
   /**
   * Customize ai-generated musics
   *
-  * @return idcard
+  * @param array $query
+  *   Use the result from makeQuery()
+  *
+  * @param array $features
+  *   Use a list of results from makeClimaxFeature()
+  *
+  * @return array
+  *   Returns a new id card
   */
   public function customize($duration, $query = [], $features = [])
   {
@@ -362,12 +432,22 @@ class Muzeek
   /**
   * Customize ai-generated musics
   *
-  * @return idcard
+  * @param string $finalHash
+  *   Use the finalHash of an existing id card
+  *
+  * @param int $duration
+  *   Choose a new duration to change lenght
+  *
+  * @param array $features
+  *   Use a list of results from makeClimaxFeature()
+  *
+  * @return array
+  *   Returns a new id card
   */
-  public function modify($original, $duration, $features = [])
+  public function modify($finalHash, $duration, $features = [])
   {
     $attributes                     = [];
-    $attributes["finalHash"]        = $original;
+    $attributes["finalHash"]        = $finalHash;
     $attributes["duration"]         = $duration;
     $attributes["syncPoints"]       = $features;
 
@@ -387,7 +467,18 @@ class Muzeek
   * users that logs in with a regular account (not an api key) should first retreive a quote using applyCharges = false
   * api users can only purchase premium licenses
   *
-  * @return
+  * @param string $finalHash
+  *   Use the finalHash of an existing id card
+  *
+  * @param string $license
+  *   License type standard or premium, api user may only select premium license
+  *
+  * @param boolean $applyCharges
+  *   API users may directly set $applyCharges to True
+  *   Standard users should request a quote using $applyCharges = False then confirm the buy using $applyCharges = True
+  *
+  * @return array
+  *   Price or credit applied (usefull when regular login, api user are charged after use based on volume)
   */
   public function license($finalHash, $license = "premium", $applyCharges = TRUE)
   {
@@ -408,7 +499,17 @@ class Muzeek
   /**
   * get an url for a known music
   *
-  * @return idcard
+  * @param string $finalHash
+  *   Use the finalHash of an existing id card
+  *
+  * @param string $quality
+  *   Available qualities are protected, low, high, lossless
+  *   If the music is not licensed only the protected version is available.
+  *   Note : protected means low quality with watermark
+  *
+  * @return string
+  *   Returns a fresh temporary URL to use for preview or download
+  *
   */
   public function getMusicURL($finalHash, $quality)
   {
