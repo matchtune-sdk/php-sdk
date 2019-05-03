@@ -43,7 +43,7 @@ if ($genres = $api->genres()) {
 
 ## Api documentation
 
-All mechanisms developed here are documented on our [REST API documentation] (https://developer.muzeek.co/)
+All mechanisms developed here are documented on our [REST API documentation](https://developer.muzeek.co/)
 
 ## License
 
