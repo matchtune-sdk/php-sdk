@@ -53,6 +53,8 @@ function printIDCard($idcard) {
 
 function savetoken($clientid, $token) {
   file_put_contents(".muzeektoken_".$clientid, json_encode($token));
+
+  return null;
 }
 
 /**
@@ -68,6 +70,7 @@ function retreivetoken($clientid) {
       return $token;
     }
   }
+  
   return null;
 }
 

@@ -22,7 +22,7 @@ use Muzeek\Muzeek;
 $api = new Muzeek(["app_token" => $app_token]);
 
 $haserror = true;
-// -- login if needed
+// -- Load genre & subgenre list
 if ($genres = $api->genres()) {
 
   // -- pick a random genre
@@ -40,6 +40,10 @@ if ($genres = $api->genres()) {
   }
 }
 ```
+
+## Api documentation
+
+All mechanisms developed here are documented on our [REST API documentation] (https://developer.muzeek.co/)
 
 ## License
 

@@ -13,7 +13,7 @@
 ** Policies [https://app.muzeek.co/terms-of-service]. This copyright notice
 ** shall be included in all copies or substantial portions of the software.
 **
-** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+** THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 ** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 ** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
 ** THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
@@ -28,7 +28,6 @@ namespace Muzeek;
 *
 * @package Muzeek
 */
-
 class Muzeek
 {
   /**
@@ -73,7 +72,6 @@ class Muzeek
   *   You should set app_id / app_secret / app_token in the contructor or in the environment
   *   using respectively APP_ID_ENV_NAME / APP_SECRET_ENV_NAME / APP_TOKEN_ENV_NAME
   *
-  * @throws MuzeekSDKException
   */
   public function __construct(array $config = [])
   {
@@ -104,25 +102,25 @@ class Muzeek
   */
   protected function callAPI($target, $method, $data = false)
   {
-    $url                = $this->config["app_endpoint"] . "/" . $target;
+    $url                = $this->config['app_endpoint'] . '/' . $target;
     $curl               = curl_init();
     //curl_setopt($curl, CURLOPT_VERBOSE, true);
     $this->lasterror    = null;
 
     switch ($method)
     {
-      case "POST":
+      case 'POST':
       curl_setopt($curl, CURLOPT_POST, 1);
       if ($data) {
         curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
       }
       break;
-      case "PUT":
+      case 'PUT':
       curl_setopt($curl, CURLOPT_PUT, 1);
       break;
       default:
       if ($data) {
-        $url = sprintf("%s?%s", $url, http_build_query($data));
+        $url = sprintf('%s?%s', $url, http_build_query($data));
       }
     }
 
@@ -131,8 +129,8 @@ class Muzeek
     $headers[]          = 'Content-Type: application/json';
     $headers[]          = 'User-Agent: Muzeek-PHP-SDK/' . static::VERSION . ' (' . php_uname() . ')';
 
-    if ($this->config["app_token"] != null) {
-      $headers[]        = 'Authorization: Bearer ' . $this->config["app_token"]["value"];
+    if ($this->config['app_token'] != null) {
+      $headers[]        = 'Authorization: Bearer ' . $this->config['app_token']['value'];
     }
 
     curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
@@ -147,11 +145,11 @@ class Muzeek
 
     if ($status == '200') {
       $this->lasterror  = null;
-      return $data["data"]["attributes"];
+      return $data['data']['attributes'];
     }
 
-    if (isset($data["errors"])) {
-      $this->lasterror = array_pop($data["errors"]);
+    if (isset($data['errors'])) {
+      $this->lasterror = array_pop($data['errors']);
     } else {
       $this->lasterror = array_pop($data);
     }
@@ -167,7 +165,7 @@ class Muzeek
   */
   public function getCurrentToken()
   {
-    return $this->config["app_token"];
+    return $this->config['app_token'];
   }
 
   /**
@@ -190,7 +188,7 @@ class Muzeek
   public function apiVersion()
   {
     $result = $this->callAPI('version', 'GET');
-    return $result["version"];
+    return $result['version'];
   }
 
   /**
@@ -207,24 +205,24 @@ class Muzeek
   */
   public function apiLogin($client_id, $tos)
   {
-    $app_id                   = $this->config["app_id"];
-    $app_secret               = $this->config["app_secret"];
+    $app_id                   = $this->config['app_id'];
+    $app_secret               = $this->config['app_secret'];
     $unixtime                 = time();
     $payload                  = $unixtime.$client_id.$app_id;
     $signature                = base64_encode(hash_hmac('sha256', $payload, $app_secret, TRUE));
 
     $attributes               = [];
-    $attributes["UNIXTIME"]   = $unixtime;
-    $attributes["UUID"]       = $client_id;
-    $attributes["APPId"]      = $app_id;
-    $attributes["tos"]        = $tos;
-    $attributes["signature"]  = $signature;
+    $attributes['UNIXTIME']   = $unixtime;
+    $attributes['UUID']       = $client_id;
+    $attributes['APPId']      = $app_id;
+    $attributes['tos']        = $tos;
+    $attributes['signature']  = $signature;
 
     $data                     = ['data' => ['type' => 'tokens', 'attributes' => $attributes]];
 
     $result = $this->callAPI('tokens', 'POST', $data);
     if ($result != null) {
-      $this->config["app_token"] = $result;
+      $this->config['app_token'] = $result;
       return true;
     }
     return false;
@@ -248,7 +246,7 @@ class Muzeek
 
     $result = $this->callAPI('tokens', 'POST', $data);
     if ($result != null) {
-      $this->config["app_token"] = $result;
+      $this->config['app_token'] = $result;
       return true;
     }
     return false;
@@ -266,10 +264,10 @@ class Muzeek
   {
     $output                     = [];
     foreach ($genres as $item) {
-      if (!isset($output[$item["genre"]])) {
-        $output[$item["genre"]] = [];
+      if (!isset($output[$item['genre']])) {
+        $output[$item['genre']] = [];
       }
-      $output[$item["genre"]][] = $item["subgenre"];
+      $output[$item['genre']][] = $item['subgenre'];
     }
 
     foreach ($output as $key => $value) {
@@ -317,16 +315,16 @@ class Muzeek
   {
     $query = [];
     if ($genre != null) {
-      $query["genre"]             = $genre;
+      $query['genre']             = $genre;
     }
     if ($subgenre != null) {
-      $query["subgenre"]          = $subgenre;
+      $query['subgenre']          = $subgenre;
     }
     if ($title != null) {
-      $query["title"]             = $title;
+      $query['title']             = $title;
     }
     if ($tags != null) {
-      $query["tags"]              = $tags;
+      $query['tags']              = $tags;
     }
     return $query;
   }
@@ -349,16 +347,16 @@ class Muzeek
   public function makeClimaxFeature($timecode, $withRiser = true, $withDrop = true)
   {
     $feature = [];
-    $feature["cursor"]            = $timecode;
-    $feature["cutAfterPoint"]     = true;
-    $feature["followingPartType"] = "climax";
-    $feature["isFinal"]           = false;
-    $feature["addonsTypes"]       = [];
+    $feature['cursor']            = $timecode;
+    $feature['cutAfterPoint']     = true;
+    $feature['followingPartType'] = 'climax';
+    $feature['isFinal']           = false;
+    $feature['addonsTypes']       = [];
     if ($withRiser) {
-      $feature["addonsTypes"][]   = "riser";
+      $feature['addonsTypes'][]   = 'riser';
     }
     if ($withDrop) {
-      $feature["addonsTypes"][]   = "drop";
+      $feature['addonsTypes'][]   = 'drop';
     }
 
     return $feature;
@@ -374,13 +372,13 @@ class Muzeek
   */
   private function _filterIDCard($card) {
     $output = [];
-    $output["license"]              = $card["license"];
-    $output["finalHash"]            = $card["finalHash"];
-    $output["metadata"]             = $card["metadata"];
-    $output["metadata"]["duration"] = $card["totalDuration"];
-    $output["urls"]                 = $card["urls"];
+    $output['license']              = $card['license'];
+    $output['finalHash']            = $card['finalHash'];
+    $output['metadata']             = $card['metadata'];
+    $output['metadata']['duration'] = $card['totalDuration'];
+    $output['urls']                 = $card['urls'];
 
-    unset($output["metadata"]["characteristics"]);
+    unset($output['metadata']['characteristics']);
     return $output;
   }
 
@@ -394,7 +392,7 @@ class Muzeek
   */
   public function generate($query = [])
   {
-    $data = ["data" => ["type" => "musics", "attributes" => $query]];
+    $data = ['data' => ['type' => 'musics', 'attributes' => $query]];
 
     $result = $this->callAPI('musics', 'POST', $data);
     if ($result != null) {
@@ -418,10 +416,10 @@ class Muzeek
   public function customize($duration, $query = [], $features = [])
   {
     $attributes               = $query;
-    $attributes["duration"]   = $duration;
-    $attributes["syncPoints"] = $features;
+    $attributes['duration']   = $duration;
+    $attributes['syncPoints'] = $features;
 
-    $data = ["data" => ["type" => "customize", "attributes" => $attributes]];
+    $data = ['data' => ['type' => 'customize', 'attributes' => $attributes]];
     $result = $this->callAPI('musics', 'POST', $data);
     if ($result != null) {
       return $this->_filterIDCard($result);
@@ -447,11 +445,11 @@ class Muzeek
   public function modify($finalHash, $duration, $features = [])
   {
     $attributes                     = [];
-    $attributes["finalHash"]        = $finalHash;
-    $attributes["duration"]         = $duration;
-    $attributes["syncPoints"]       = $features;
+    $attributes['finalHash']        = $finalHash;
+    $attributes['duration']         = $duration;
+    $attributes['syncPoints']       = $features;
 
-    $data = ["data" => ["type" => "customize", "attributes" => $attributes]];
+    $data = ['data' => ['type' => 'customize', 'attributes' => $attributes]];
 
     $result = $this->callAPI('musics', 'POST', $data);
     if ($result != null) {
@@ -480,14 +478,14 @@ class Muzeek
   * @return array
   *   Price or credit applied (usefull when regular login, api user are charged after use based on volume)
   */
-  public function license($finalHash, $license = "premium", $applyCharges = TRUE)
+  public function license($finalHash, $license = 'premium', $applyCharges = TRUE)
   {
     $attributes                     = [];
-    $attributes["finalHash"]        = is_array($finalHash) ? $finalHash : [$finalHash];
-    $attributes["license"]          = $license;
-    $attributes["applyCharges"]     = $applyCharges;
+    $attributes['finalHash']        = is_array($finalHash) ? $finalHash : [$finalHash];
+    $attributes['license']          = $license;
+    $attributes['applyCharges']     = $applyCharges;
 
-    $data = ["data" => ["type" => "purchase", "attributes" => $attributes]];
+    $data = ['data' => ['type' => 'purchase', 'attributes' => $attributes]];
 
     $result = $this->callAPI('musics/purchase', 'POST', $data);
     if ($result != null) {
