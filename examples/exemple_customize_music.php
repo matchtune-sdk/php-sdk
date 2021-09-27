@@ -1,7 +1,7 @@
 <?php
 
 /*
-** Copyright 2019 MatchTune Inc.
+** Copyright 2021 MatchTune Inc.
 **
 ** You are hereby granted a non-exclusive, worldwide, royalty-free license to
 ** use, copy, modify, and distribute this software in source code or binary
