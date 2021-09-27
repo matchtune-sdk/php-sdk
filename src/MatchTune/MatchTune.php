@@ -417,7 +417,7 @@ class MatchTune
     $attributes['duration']         = $duration;
     $attributes['syncPoints']       = $features;
 
-    $data = ['data' => ['type' => 'customize', 'attributes' => $attributes]];
+    $data = ['data' => ['type' => 'search', 'attributes' => $attributes]];
 
     $result = $this->callAPI('search', 'POST', $data);
     if ($result != null) {

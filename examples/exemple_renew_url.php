@@ -26,7 +26,7 @@ require_once __DIR__ . '/credentials.php';
 require_once __DIR__ . '/helpers.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
-use MatchTune\MatchTune
+use MatchTune\MatchTune;
 
 $client_id = MATCHTUNE_CLIENT_ID;
 $app_token = retreivetoken($client_id);
