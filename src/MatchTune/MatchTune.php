@@ -253,43 +253,17 @@ class MatchTune
   }
 
   /**
-  * Filter all available genre and subgenre
-  *
-  * @param array $genre
-  *   Result from api call GET /genres
-  *
-  * @return array of genres & subgenres
-  */
-  private function _genres2dictionnary($genres)
-  {
-    $output                     = [];
-    foreach ($genres as $item) {
-      if (!isset($output[$item['genre']])) {
-        $output[$item['genre']] = [];
-      }
-      $output[$item['genre']][] = $item['subgenre'];
-    }
-
-    foreach ($output as $key => $value) {
-      asort($output[$key]);
-    }
-    ksort($output);
-
-    return $output;
-  }
-
-  /**
   * Retreive all available genre and subgenre
   *
-  * @return array of genres & subgenres
+  * @return array of genres
   */
   public function genres()
   {
     $data = [];
 
-    $result = $this->callAPI('genres', 'GET', $data);
+    $result = $this->callAPI('classifiers', 'GET', $data);
     if ($result != null) {
-      return $this->_genres2dictionnary($result);
+      return $result["genres"];
     }
     return false;
   }
@@ -300,9 +274,6 @@ class MatchTune
   * @param string $genre
   *   Genre from the list of genre (possible to send an array of genre)
   *
-  * @param string $subgenre
-  *   Subgenre from the list of subgenre (possible to send an array of subgenre)
-  *
   * @param string $title
   *   Title of a known matrix (possible to send an array of title)
   *
@@ -311,14 +282,11 @@ class MatchTune
   *
   * @return array formated dictionnary
   */
-  public function makeQuery($genre = null, $subgenre = null, $title = null, $tags = null)
+  public function makeQuery($genre = null, $title = null, $tags = null)
   {
     $query = [];
     if ($genre != null) {
-      $query['genre']             = $genre;
-    }
-    if ($subgenre != null) {
-      $query['subgenre']          = $subgenre;
+      $query['genres']            = $genre;
     }
     if ($title != null) {
       $query['title']             = $title;
@@ -372,11 +340,11 @@ class MatchTune
   */
   private function _filterIDCard($card) {
     $output = [];
-    $output['license']              = $card['license'];
-    $output['finalHash']            = $card['finalHash'];
-    $output['metadata']             = $card['metadata'];
-    $output['metadata']['duration'] = $card['totalDuration'];
-    $output['urls']                 = $card['urls'];
+    $output['license']              = $card[0]['license'];
+    $output['finalHash']            = $card[0]['finalHash'];
+    $output['metadata']             = $card[0]['metadata'];
+    $output['metadata']['duration'] = $card[0]['totalDuration'];
+    $output['urls']                 = $card[0]['urls'];
 
     unset($output['metadata']['characteristics']);
     return $output;

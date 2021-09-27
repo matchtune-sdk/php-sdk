@@ -47,7 +47,7 @@ if ($app_token != null || $result = $api->apiLogin($client_id, MATCHTUNE_TOS)) {
   if ($genres = $api->genres()) {
 
     // -- pick a random genre
-    $genre = array_rand($genres);
+    $genre = $genres[array_rand($genres)];
 
     // -- create a search query
     $query = $api->makeQuery($genre, $subgenre = null, $title = null, $tags = null);

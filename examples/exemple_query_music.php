@@ -31,8 +31,8 @@ use MatchTune\MatchTune;
 $client_id = MATCHTUNE_CLIENT_ID;
 $app_token = retreivetoken($client_id);
 $api = new MatchTune([ "app_token"   => $app_token,
-                    "app_id"      => MATCHTUNE_APP_ID,
-                    "app_secret"  => MATCHTUNE_APP_SECRET]);
+                       "app_id"      => MATCHTUNE_APP_ID,
+                       "app_secret"  => MATCHTUNE_APP_SECRET]);
 $version = $api->apiVersion();
 echo "API Version : $version\n";
 
@@ -47,7 +47,7 @@ if ($app_token != null || $result = $api->apiLogin($client_id, MATCHTUNE_TOS)) {
   if ($genres = $api->genres()) {
 
     // -- pick a random genre
-    $genre = array_rand($genres);
+    $genre = $genres[array_rand($genres)];
 
     // -- create a search query
     $query = $api->makeQuery($genre, $subgenre = null, $title = null, $tags = null);
