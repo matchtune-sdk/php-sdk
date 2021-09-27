@@ -26,10 +26,10 @@ $haserror = true;
 if ($genres = $api->genres()) {
 
   // -- pick a random genre
-  $genre = array_rand($genres);
+  $genre = $genres[array_rand($genres)];
 
   // -- create a search query
-  $query = $api->makeQuery($genre, $subgenre = null, $title = null, $tags = null);
+  $query = $api->makeQuery($genre, $title = null, $tags = null);
 
   // -- request a standard generated music
   if ($idcard = $api->generate($query)) {
