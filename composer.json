@@ -1,14 +1,14 @@
 {
-    "name": "muzeek-sdk/php-sdk",
+    "name": "matchtune-sdk/php-sdk",
     "type": "library",
-    "description": "A framework library to access Muzeek API",
-    "keywords": ["music", "muzeek", "sdk"],
-    "homepage": "https://www.muzeek.co/",
+    "description": "A framework library to access MatchTune API",
+    "keywords": ["music", "matchtune", "sdk"],
+    "homepage": "https://www.matchtune.com/",
     "license": "proprietary",
     "authors": [
         {
             "name": "Igal Cohen-Hadria",
-            "email": "igal@muzeek.co"
+            "email": "igal@matchtune.com"
         }
     ],
     "require": {
@@ -16,12 +16,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Muzeek\\": "src/Muzeek"
+            "MatchTune\\": "src/MatchTune"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Muzeek\\": "src/Muzeek"
+            "MatchTune\\": "src/MatchTune"
         }
     }
 }

@@ -1,16 +1,16 @@
 <?php
 
 /*
-** Copyright 2019 Muzeek Inc.
+** Copyright 2021 MatchTune Inc.
 **
 ** You are hereby granted a non-exclusive, worldwide, royalty-free license to
 ** use, copy, modify, and distribute this software in source code or binary
 ** form for use in connection with the web services and APIs provided by
-** Muzeek.
+** MatchTune.
 **
-** As with any software that integrates with the Muzeek platform, your use
-** of this software is subject to the Muzeek terms of services and
-** Policies [https://app.muzeek.co/terms-of-service]. This copyright notice
+** As with any software that integrates with the MatchTune platform, your use
+** of this software is subject to the MatchTune terms of services and
+** Policies [https://www.matchtune.com/privacy-policy]. This copyright notice
 ** shall be included in all copies or substantial portions of the software.
 **
 ** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
@@ -52,7 +52,7 @@ function printIDCard($idcard) {
 */
 
 function savetoken($clientid, $token) {
-  file_put_contents(".muzeektoken_".$clientid, json_encode($token));
+  file_put_contents(".matchtunetoken_".$clientid, json_encode($token));
 
   return null;
 }
@@ -64,8 +64,8 @@ function savetoken($clientid, $token) {
 */
 
 function retreivetoken($clientid) {
-  if (is_file(".muzeektoken_".$clientid)) {
-    $token = json_decode(file_get_contents(".muzeektoken_".$clientid), true);
+  if (is_file(".matchtunetoken_".$clientid)) {
+    $token = json_decode(file_get_contents(".matchtunetoken_".$clientid), true);
     if (time() < $token["expiration"]) {
       return $token;
     }

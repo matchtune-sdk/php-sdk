@@ -1,16 +1,16 @@
 <?php
 
 /*
-** Copyright 2019 Muzeek Inc.
+** Copyright 2021 MatchTune Inc.
 **
 ** You are hereby granted a non-exclusive, worldwide, royalty-free license to
 ** use, copy, modify, and distribute this software in source code or binary
 ** form for use in connection with the web services and APIs provided by
-** Muzeek.
+** MatchTune.
 **
-** As with any software that integrates with the Muzeek platform, your use
-** of this software is subject to the Muzeek terms of services and
-** Policies [https://app.muzeek.co/terms-of-service]. This copyright notice
+** As with any software that integrates with the MatchTune platform, your use
+** of this software is subject to the MatchTune terms of services and
+** Policies [https://www.matchtune.com/privacy-policy]. This copyright notice
 ** shall be included in all copies or substantial portions of the software.
 **
 ** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
@@ -26,19 +26,19 @@ require_once __DIR__ . '/credentials.php';
 require_once __DIR__ . '/helpers.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
-use Muzeek\Muzeek
+use MatchTune\MatchTune
 
-$client_id = MUZEEK_CLIENT_ID;
+$client_id = MATCHTUNE_CLIENT_ID;
 $app_token = retreivetoken($client_id);
-$api = new Muzeek([ "app_token"   => $app_token,
-                    "app_id"      => MUZEEK_APP_ID,
-                    "app_secret"  => MUZEEK_APP_SECRET]);
+$api = new MatchTune([ "app_token"   => $app_token,
+                    "app_id"      => MATCHTUNE_APP_ID,
+                    "app_secret"  => MATCHTUNE_APP_SECRET]);
 $version = $api->apiVersion();
 echo "API Version : $version\n";
 
 $haserror = true;
 // -- login if needed
-if ($app_token != null || $result = $api->apiLogin($client_id, MUZEEK_TOS)) {
+if ($app_token != null || $result = $api->apiLogin($client_id, MATCHTUNE_TOS)) {
 
   // -- save the token
   savetoken($client_id, $api->getCurrentToken());
